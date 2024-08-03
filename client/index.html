@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Game Client</title>
+</head>
+<body>
+    <h1>Game Client</h1>
+    <div>
+        <button id="connectBtn">Connect</button>
+        <button id="exitBtn" style="display:none;">Exit</button>
+    </div>
+    <div>
+        <h2 id="player_id"></h2>
+    </div>
+    <div id="messages" style="display: none;">
+        <h2>Messages</h2>
+        <table>
+            <tbody id="messageTableBody">
+                <!-- Messages will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <div id="roomSelection" style="display:none;">
+        <h2>Select a Room</h2>
+        <select id="roomList"></select>
+        <button id="selectRoomBtn">Select Room</button>
+    </div>
+    <div id="roomCapacity" style="display:none;">
+        <h2>Room Capacity</h2>
+        <p id="capacityInfo"></p>
+    </div>
+    <div id="transformData" style="display:none;">
+        <h2>Transform Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Player ID</th>
+                    <th>Transform</th>
+                </tr>
+            </thead>
+            <tbody id="transformTableBody">
+                <!-- Transform data will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <script src="client.js"></script>
+</body>
+</html>
