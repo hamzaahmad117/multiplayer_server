@@ -1,7 +1,7 @@
 import asyncio
 
 class PlayerManager:
-    def __init__(self, max_players=10):
+    def __init__(self, max_players=100):
         self.players = {}
         self.lock = asyncio.Lock()
         self.next_player_id = 0
@@ -11,7 +11,7 @@ class PlayerManager:
         async with self.lock:
             if len(self.players) < self.max_players:
                 player_id = self.next_player_id
-                self.players[player_id] = {"transform": [0.0] * 12, "state": 0, "room": None}
+                self.players[player_id] = {"transform": [0.0] * 12, "state": 0, "room": None, "room_key": None}
                 self.next_player_id += 1
                 return player_id
             return None
