@@ -1,3 +1,5 @@
+let timerInterval;
+
 document.getElementById('connectBtn').addEventListener('click', connect);
 document.getElementById('exitBtn').addEventListener('click', exit);
 
@@ -21,7 +23,9 @@ function connect() {
     websocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         console.log('Received data:', data);
-        
+        if (data.time) {
+                startTimer(data.time);
+        }
         if (data.message) {
             displayMessage(data.message);
         } else {
@@ -35,6 +39,7 @@ function connect() {
         document.getElementById('exitBtn').style.display = 'none';
         clearInterval(transformInterval);
         clearInterval(checkTransformInterval);
+        clearInterval(timerInterval);
         transformInterval = null;
         checkTransformInterval = null;
         resetUI();
@@ -84,12 +89,12 @@ function handleMessage(data) {
                     displayMessage(`Game will start after ${data.minimum} players have joined.`)
                 }
             } else {
-
                 displayMessage(data.error);
             }
             break;
         case 2.5:
             displayMessage(`Game has started!`);
+            document.getElementById('timer').style.display = 'none';
             if (checkTransformInterval) {
                 clearInterval(checkTransformInterval);
             }
@@ -117,6 +122,7 @@ function handleMessage(data) {
                 transformInterval = null;
             }
             break;
+            
         default:
             console.error('Unknown step');
     }
@@ -172,6 +178,25 @@ function updateTransformTable(transforms) {
     }
 }
 
+// Function to start the timer
+function startTimer(seconds) {
+    const timerDisplay = document.getElementById('timerDisplay');
+    let timeLeft = Math.ceil(seconds);
+
+    clearInterval(timerInterval);
+    document.getElementById('timer').style.display = 'block';
+
+    timerInterval = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById('timer').style.display = 'none';
+        } else {
+            timerDisplay.textContent = `${timeLeft} second(s) remaining`;
+            timeLeft -= 1;
+        }
+    }, 1000);
+}
+
 // Function to handle exiting the WebSocket connection
 function exit() {
     if (websocket) {
@@ -179,6 +204,7 @@ function exit() {
         websocket.close();
         clearInterval(transformInterval);
         clearInterval(checkTransformInterval);
+        clearInterval(timerInterval);
         transformInterval = null;
         checkTransformInterval = null;
     }
@@ -188,6 +214,7 @@ function exit() {
 function resetUI() {
     document.getElementById('roomSelection').style.display = 'none';
     document.getElementById('transformData').style.display = 'none';
+    document.getElementById('timer').style.display = 'none';
     document.getElementById('messages').style.display = 'none';
     document.getElementById('player_id').style.display = 'none';
     document.getElementById('messageTableBody').innerHTML = ''; // Clear messages
@@ -201,6 +228,7 @@ window.addEventListener('beforeunload', () => {
         websocket.close();
         clearInterval(transformInterval);
         clearInterval(checkTransformInterval);
+        clearInterval(timerInterval);
         transformInterval = null;
         checkTransformInterval = null;
     }
